@@ -1,0 +1,6 @@
+IEDialog_SCU_v1.2.dir.vbs
+    仅实现了IE升级界面
+IEDialog_SCU_v1.3.dir.vbs
+    改善全选时，不能再单选
+IEDialog_SCU_v1.4.dir.vbs（目前）
+    进一步完善全选功能。
