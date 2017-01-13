@@ -1,0 +1,240 @@
+脚本小工具使用说明
+一、文件夹
+1、update_OSsoftware文件夹
+	1）update_OSsoft_rm.vbs
+作用：删除/home目录下update_os.sh、sys.tgz、scu.tgz、nmu.tgz四个文件。
+准备的文件：update_os.sh sys_tgz
+						scu.tgz      nmu.tgz
+文件目录：none
+设备目录：/home
+
+	2）update_os.sh
+作用：需要在设备上运行
+			（1）update_os.sh + 无参数，用来备份文件
+			建立/home/bakeup目录
+			备份/home/sys、/home/scu、/home/nmu目录
+			将备份后的文件sys.tgz、scu.tgz、nmu.tgz拷贝到/home/bakeup。
+			（2）update_os.sh + 任意参数，用来提取文件
+			备份/home/sys/netConfig.sh后，
+			恢复/home/sys、/home/scu、/home/nmu目录
+			恢复库文件
+准备的文件：硬盘空间足够，否则出错。
+文件目录：d:/R845/ftp/bakeup
+设备目录：/home/bakeup
+
+	3）update_OSsoft_2PC.vbs
+作用：将备份文件拷贝到d:/R845/ftp/bakeup
+			包括sys.tgz、scu.tgz、nmu.tgz
+			包括/lib/libnmprotobuf.so、/lib/libprotobuf.so.7
+准备的文件：事先运行update_os.sh，备份文件
+文件目录：d:/R845/ftp/bakeup
+设备目录：/home/bakeup
+
+	4）update_OSsoft_2DUT.vbs
+作用：将备份文件从d:/R845/ftp/bakeup拷贝到/home
+			包括sys.tgz、scu.tgz、nmu.tgz
+			包括/lib/libnmprotobuf.so、/lib/libprotobuf.so.7
+准备的文件：d:/R845/ftp/bakeup目录存放备份文件
+文件目录：d:/R845/ftp/bakeup
+设备目录：/home
+
+	5）update_OS_sh.vbs
+作用：将update_os.sh文件从d:/R845/ftp拷贝到/home
+准备的文件：d:/R845/ftp/目录存放update_os.sh文件
+文件目录：d:/R845/ftp
+设备目录：/home
+
+2、update_R845文件夹
+	1）update_R845_e1k4.vbs
+作用：升级R845上的e1k4单盘
+准备的文件：包括8个文件
+						vxWorks_b.bin  e1k4.zj  E1K4.zb
+						boardproj.cmd  bmulib22_hard.zb arrive.zj
+						arrive.zb      E1K4_hard.zb
+文件目录：none
+设备目录：/home/bmu852/e1k4/
+
+	2）update_R845_msp1.vbs
+作用：升级R845上的mspl单盘
+准备的文件：包括5个文件
+						vxWorks_b.bin  top_msp1.zj    ProjectMSP1.zb
+						boardproj.cmd  bmulib22.zb    
+文件目录：none
+设备目录：/home/bmu852/mspl/
+
+	3）update_R845_scu.vbs
+作用：升级R845上的scu单盘
+准备的文件：包括11个文件  
+						vxWorks_8247a_256M.z  SCUP1.zb       HX330B2_R845.xex
+						XelSdk.zb             XelApp.zb      SCUP1.zj
+						boardproj.cmd         HX330_R845.xex R845_1588.zb
+						bmulib_8247a.zb       param.xml      
+文件目录：none
+设备目录：/home/bmu852/scup1/
+
+	4）update_R845_esk4.vbs
+作用：升级R845上的esk4单盘
+准备的文件：包括5个文件  
+						vxWorks_b.bin     esk4.zj      esk4.zb
+						boardproj.cmd     bmulib22.zb      
+文件目录：none
+设备目录：/home/bmu852/esk4/
+
+	5）update_R845_xsk2.vbs
+作用：升级R845上的xsk2单盘
+准备的文件：包括6个文件  
+						QT2225.bin     XSK2.zb     bmulib22.zb
+						boardproj.cmd  xsk2.zj     vxWorks_b.bin
+文件目录：none
+设备目录：/home/bmu852/xsk2/
+
+	6）update_R845_msk2.vbs
+作用：升级R845上的msk2单盘
+准备的文件：包括5个文件  
+						vxWorks_b.bin  top_msk2.zj   ProjectMSK2.zb
+						boardproj.cmd  bmulib22.zb   
+文件目录：none
+设备目录：/home/bmu852/msk2/
+
+	7）update_R845_msk1.vbs
+作用：升级R845上的msk1单盘
+准备的文件：包括5个文件  
+						vxWorks_b.bin  top_msk2.zj   MSK1.zb
+						boardproj.cmd  bmulib22.zb   
+文件目录：none
+设备目录：/home/bmu852/msk1/
+
+	8）update_R845_scu_bin.vbs
+作用：不带/scup1目录，升级R845上的scu单盘，只升级部分软件
+准备的文件：包括11个文件  
+						vxWorks_8247a_256M.z  SCUP1.zb       HX330B2_R845.xex
+						XelSdk.zb             XelApp.zb      SCUP1.zj
+						boardproj.cmd         HX330_R845.xex R845_1588.zb
+						bmulib_8247a.zb       param.xml      
+文件目录：none
+设备目录：/home/bmu852/
+
+	9）update_R845_scu_dir_bin.vbs
+作用：带/scup1目录，升级R845上的scu单盘，只升级部分软件
+准备的文件：包括11个文件  
+						vxWorks_8247a_256M.z  SCUP1.zb       HX330B2_R845.xex
+						XelSdk.zb             XelApp.zb      SCUP1.zj
+						boardproj.cmd         HX330_R845.xex R845_1588.zb
+						bmulib_8247a.zb       param.xml      
+文件目录：none
+设备目录：/home/bmu852/scup1
+
+	10）update_R845.vbs
+作用：备份并升级设备RCU盘上rcu_r845l软件
+			以R845命名
+准备的文件：“R845”命名的文件   
+文件目录：d:/R845/rcu
+设备目录：/home/scu
+
+	11）update_R845_lib.vbs
+作用：作用：将R845和两个lib文件拷贝到R845设备，并使R845可执行。
+			包括rcu_r845l软件，以R845命名
+			    libprotobuf.so、libprotobuf.so.7
+准备的文件：“R845”命名的文件
+						libprotobuf.so.7   libprotobuf.so   
+文件目录：d:/R845/rcu
+设备目录：/home/scu   /lib
+
+3、update_R860文件夹
+	1）update_R860_scu.vbs
+作用：带/scur1目录，升级R860上的scur1单盘
+准备的文件：包括8个文件  
+						vxWorks_8247e_128M.z  boardproj.cmd   SCUR1.zb
+						ptpHubXcuj2.zb        bmulib_8247a.zb bcmsdk.zb
+						scur1_fp.zx           xcuj2_ptn.zx   
+文件目录：none
+设备目录：/home/bmu852/scur1
+
+	2）update_R860_xgr1.vbs
+作用：带/xgr1目录，升级R860上的xgr1单盘
+准备的文件：包括14个文件
+						boardproj.cmd        param.xml   HX330_R860.xex
+						XelApp.zb            XelSdk.zb   vxWorks_8247a_256M.z
+						XGPHY_firmware.bin   XGR1.zj     bmulib_8247a.zb
+						LinkOam_R860.zb      appl_NP.zb  XGR1_1588.zb
+						R86x_altera.zj       xgr1.zb  
+文件目录：none
+设备目录：/home/bmu852/xgr1/
+
+4、example文件夹
+	1）scup1_example.vbs
+作用：在R845设备scup1盘上操作时录下的模版
+准备的文件：none   
+文件目录：none
+设备目录：none
+
+	2）rcu_r845_example.vbs
+作用：在R845设备协议栈操作时录下的模版
+准备的文件：none   
+文件目录：none
+设备目录：none
+
+	3）linux_example.vbs
+作用：在RCU盘上Linux系统中操作时录下的模版
+准备的文件：none   
+文件目录：none
+设备目录：none
+
+	4）sftp_example.vbs
+作用：在secureCRT中sftp会话下操作时录制的模版
+准备的文件：none   
+文件目录：none
+设备目录：none
+
+5、tools文件夹
+	1）update_tools.vbs
+作用：将六个小工具拷贝到R845设备，并使其可执行。
+准备的文件：scu_kill、scu_re
+            nmu_kill、nmu_re
+            rcu_ch、  rcu_pid
+文件目录：d:/R845/rcu_kill_ch
+设备目录：/bin
+
+	2）delete_tools.vbs
+作用：删除/bin文件夹下面的所有小工具，文件名匹配“??u_*”。
+准备：在SFTP标签页中运行。
+
+6、changed_Scripts文件夹
+7、open_shutdown_L2VE0文件夹
+
+0、其它单个文件
+4、telnet_scu.vbs
+作用：登录SCU盘。
+准备：SCU盘IP为10.26.0.22。
+
+5、disable_print.vbs
+作用：关闭SCU盘上的up/down打印。
+
+6、telnet_rcu.vbs
+作用：登录协议栈。
+准备：协议栈IP为127.0.0.1 2650。
+
+7、update_860_scu.vbs
+作用：升级860的SCU盘。
+准备：先telnet登录到SCU盘。
+
+8、update_860_xgr1.vbs
+作用：升级860的xgr1盘。
+准备：先telnet登录到xgr1盘。
+
+9、
+
+10、telnet_panel.vbs
+作用：可以登录到所有的单盘。
+准备：准备好盘号。
+
+11、check_vpn.vbs
+作用：查看规格测试中的三项。
+      show clns nei
+      show tne board
+      show tne-statis service-id 0
+准备：进入到协议栈。
+
+12、close_all_session.vbs
+作用：可以关闭所有打开的会话。
+准备：会话中不能运行tcpdump这类软件，否则会循环发送exit。

@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<META   name=VI60_defaultClientScript   content=VBScript>
+<META   NAME= "GENERATOR "   Content= "Microsoft   Visual   Studio   6.0 ">
+<TITLE> </TITLE>
+<meta   http-equiv= "Content-Type "   content= "text/html;   charset=gb2312 "> </HEAD>
+<BODY> <pre>
+输入: "http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=%E5%85%B3%E9%94%AE%E5%AD%97&btnG=Google+Search "
+输出:关键字 </pre>
+<SCRIPT   LANGUAGE=vbscript>
+<!--
+mystr= "http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=%E5%85%B3%E9%94%AE%E5%AD%97&btnG=Google+Search "
+mystr= "http://www.google.com/search?hl=zh-CN&ie=UTF-8&oe=UTF-8&q=123&btnG=Google%E6%90%9C%E7%B4%A2&lr=lang_zh-CN "
+mystr= "http://www.google.com/search?hl=zh-CN&ie=UTF-8&oe=UTF-8&q=wo+%E6%88%9112+B&btnG=Google%E6%90%9C%E7%B4%A2&lr=lang_zh-CN "
+mystr= "http://www.google.com/search?hl=zh-CN&ie=UTF-8&oe=UTF-8&q=123&btnG=Google%E6%90%9C%E7%B4%A2&lr=lang_zh-CN "
+function   getutf8(x)
+'这个函数是用来得到%号的部分，
+'输入条件是 " "http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=%E5%85%B3%E9%94%AE%E5%AD%97&btnG=Google+Search "
+dim   first,last
+A=split(x, "& ") '定义一个临时数组
+dim   i:i=0 '临时的指针
+for   i=0   to   ubound(A)
+	if   instr(A(i), "% ")> 0   then
+		first=instr(A(i), "% ")
+		last=InStrRev(A(i), "% ")
+		getutf8=getutf8   &   mid(A(i),first,last-first+3)
+	end   if
+next
+getutf8=Right(getutf8,len(getutf8)-1) '去掉左边的%
+'msgbox   getutf8
+end   function
+
+msgbox   U8toU(getutf8(mystr))
+
+function   c16to2(x)
+'这个函数是用来转换16进制到2进制的，可以是任何长度的，一般转换UTF-8的时候是两个长度，比如A9
+'比如：输入“C2”，转化成“11000010”,其中1100是 "c "是10进制的12（1100），那么2（10）不足4位要补齐成（0010）。
+dim   tempstr
+dim   i:i=0 '临时的指针
+
+'返回不带前导与后续空格 (Trim) 的字符串副本
+for   i=1   to   len(trim(x))
+tempstr=   c10to2(cint(int( "&h "   &   mid(x,i,1))))
+do   while   len(tempstr) <4
+tempstr= "0 "   &   tempstr '如果不足4位那么补齐4位数
+loop
+c16to2=c16to2   &   tempstr
+next
+end   function
+
+
+'document.write   hex(asc( "字 "))   &   " <br/> "
+
+function   U8toU(x)
+'输入一堆有%分隔的字符串，先分成数组，根据utf8规则来判断补齐规则
+'输入:关   E5   85   B3     键     E9   94   AE 字       E5   AD   97
+'输出:关   B9D8     键     BCFC 字       D7D6
+dim   WeiS '要判断第一个编码的位数
+dim   Unicode '二进制的Unicode码
+dim   alpha '定义单个字符
+A=split(x, "% ") '定义一个临时数组
+dim   i:i=0 '临时的指针
+dim   j:j=0 '临时的指针
+
+for   i=0   to   ubound(A)
+A(i)=c16to2(A(i)) '第一次循环，先转换成2进制再说
+
+next
+
+for   i=0   to   ubound(A)-1
+WeiS=instr(A(i), "0 ") '判断第一次出现0的位置，
+'可能是1(单字节)，3(3-1字节)，4，5，6，7不可能是2和大于7
+'理论上到7，实际不会超过3。
+
+Unicode= " "
+for   j=1   to   WeiS-1
+if   j=1   then
+A(i)=right(A(i),len(A(i))-WeiS) '第一个去掉最左边的WeiS个
+Unicode=Unicode   &   A(i)
+
+else
+i=i+1
+A(i)=right(A(i),len(A(i))-2) '其余去掉最左边的两个
+Unicode=Unicode   &   A(i)
+end   if
+
+next
+
+if   len(c2to16(Unicode)) =4   then
+U8toU=U8toU   &   chrw(int( "&H "   &   c2to16(Unicode))) '总算完了,妈的！！
+else
+U8toU=U8toU   &   chr(int( "&H "   &   c2to16(Unicode))) '总算完了,妈的！！
+end   if
+
+next
+
+end   function
+'msgbox   c2to16( "11100101 ")
+
+function   c2to16(x)
+'2进制到16进制的转换，每4个0或1转换成一个16进制字母，输入长度当然不可能不是4的倍数了
+
+dim   i:i=1 '临时的指针
+for   i=1   to   len(x)     step   4
+c2to16=c2to16   &   hex(c2to10(mid(x,i,4)))
+next
+end   function
+
+function   c2to10(x)
+'单纯的2进制到10进制的转换，不考虑转16进制所需要的4位前零补齐。
+'因为这个函数很有用！以后也会用到，做过通讯和硬件的人应该知道。
+'这里用字符串代表二进制
+c2to10=0
+if   x= "0 "   then   exit   function '如果是0的话直接得0就完事
+dim   i:i=0 '临时的指针
+for   i=   0   to   len(x)   -1 '否则利用8421码计算--这个从我最开始学计算机的时候就会，好怀念当初教我们的谢道建老先生啊！
+	if   mid(x,len(x)-i,1)= "1 "   then   c2to10=c2to10+2^(i)
+next
+end   function
+
+
+function   c10to2(x) '10进制到2进制的转换
+'这个函数在计算16位到2位转换时候用到了，
+'没有做在16位里面是因为这个函数只是单纯10-2转换，不涉及16进制由4个2进制补齐空位，将来可以用到任何地方
+'比如输入2，输出“10”而不是“0010”
+'首先判断正负符号
+dim   mysign:mysign=sgn(x) '定义一个符号标记
+x=abs(x)
+
+'然后判断有几位,至少一位，x = 1 or 0, 退出循环
+dim   WeiS:WeiS=1
+
+do
+	if   x <2^WeiS   then
+		exit   do
+	else
+		WeiS=WeiS+1
+	end   if
+loop
+
+dim   tempnum:tempnum=x '定义一个临时的数字
+dim   i:i=0 '临时的指针
+for   i=WeiS   to   1     step   -1
+	if   tempnum >= 2^(i-1)   then
+		tempnum=tempnum-2^(i-1)
+		c10to2=c10to2   &   "1 "
+	else
+		c10to2=c10to2   &   "0 "
+	end   if
+next
+if   mysign=-1   then   c10to2= "- "   &   c10to2 '加上正负符号
+end   function
+-->
+</SCRIPT>
+</BODY>
+</HTML>
