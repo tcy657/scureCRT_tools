@@ -1,2 +1,0 @@
-telnet_loop_cmd_time.vbs：带系统时间
-telnet_loop_cmd.vbs：仅实现循环功能，无PC时间
